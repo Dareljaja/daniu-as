@@ -260,15 +260,45 @@ async function loadSupabasePhotos() {
                 .map(async item => {
                     const publicResult = supabaseClient.storage.from(SUPABASE_BUCKET).getPublicUrl(item.name);
                     let url = publicResult.data?.publicUrl;
+
                     if (url) {
-                        return url;
+                        try {
+                            const response = await fetch(url, { method: 'HEAD' });
+                            if (response.ok) {
+                                return url;
+                            }
+                            console.warn('Public URL no accesible, intentamos signed URL:', url, response.status);
+                        } catch (err) {
+                            console.warn('Error al verificar public URL:', err);
+                        }
                     }
+
                     const { data: signedData, error: signedError } = await supabaseClient.storage.from(SUPABASE_BUCKET).createSignedUrl(item.name, 60);
                     if (signedError) {
                         console.error('Error creando signed URL:', signedError.message || signedError);
+                    } else if (signedData?.signedUrl) {
+                        try {
+                            const response = await fetch(signedData.signedUrl, { method: 'HEAD' });
+                            if (response.ok) {
+                                return signedData.signedUrl;
+                            }
+                            console.warn('Signed URL no accesible:', signedData.signedUrl, response.status);
+                        } catch (err) {
+                            console.warn('Error al verificar signed URL:', err);
+                        }
+                    }
+
+                    try {
+                        const { data: downloadData, error: downloadError } = await supabaseClient.storage.from(SUPABASE_BUCKET).download(item.name);
+                        if (downloadError) {
+                            console.error('Error descargando blob de Supabase:', downloadError.message || downloadError);
+                            return null;
+                        }
+                        return URL.createObjectURL(downloadData);
+                    } catch (err) {
+                        console.error('Error creando blob URL:', err);
                         return null;
                     }
-                    return signedData?.signedUrl || null;
                 }));
             supabasePhotos = urls.filter(Boolean);
             console.log('Supabase photo URLs:', supabasePhotos);
