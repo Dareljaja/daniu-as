@@ -269,7 +269,8 @@ async function uploadPhotoToSupabase(file) {
     const fileName = `${Date.now()}_${file.name.replace(/\s+/g, '_')}`;
     const { error } = await supabaseClient.storage.from(SUPABASE_BUCKET).upload(fileName, file, { cacheControl: '3600', upsert: false });
     if (error) {
-        alert('Error al subir la foto: ' + error.message);
+        const details = error.details || error.code || error.status || '';
+        alert('Error al subir la foto: ' + error.message + (details ? ' (' + details + ')' : ''));
         console.error(error);
         return;
     }
