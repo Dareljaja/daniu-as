@@ -242,35 +242,20 @@ const defaultComments = [
 ];
 
 const SUPABASE_URL = 'https://vyxvbeczzbhrbibhobzl.supabase.co';
-const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZ5eHZiZWN6emJpYmhvYnpsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzkzOTAxMjgsImV4cCI6MjA5NDk2NjEyOH0.-jQZtwSVjClhp-nnxeb3MEK2RaLJrfNES5NTS3kM-qU';
+const SUPABASE_ANON_KEY = 'sb_publishable_J8Qwy5OixrwoI2UJ0rV-SQ_2A1qb4F1';
 const SUPABASE_BUCKET = 'public-photos';
-
-const supabaseGlobal = typeof supabase !== 'undefined' ? supabase : (typeof window !== 'undefined' ? window.supabase || window.Supabase : undefined);
-const supabaseCreator = supabaseGlobal?.createClient ? supabaseGlobal.createClient.bind(supabaseGlobal) : (typeof createClient !== 'undefined' ? createClient : undefined);
-let supabaseClient = null;
-if (supabaseCreator) {
-    supabaseClient = supabaseCreator(SUPABASE_URL, SUPABASE_ANON_KEY);
-} else {
-    console.error('Supabase client no está disponible. Verifica el CDN y prueba recargando la página.');
-}
-
+const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 var supabasePhotos = [];
 
 async function loadSupabasePhotos() {
-    if (!supabaseClient) {
-        console.warn('Supabase no está inicializado. Se mostrará la galería predeterminada.');
-        renderPhotos();
-        return;
-    }
-
     try {
-        const { data, error } = await supabaseClient.storage.from(PUBLIC-PHOTOS).list('', { limit: 100, offset: 0, sortBy: { column: 'name', order: 'asc' } });
+        const { data, error } = await supabaseClient.storage.from(SUPABASE_BUCKET).list('', { limit: 100, offset: 0, sortBy: { column: 'name', order: 'asc' } });
         if (error) {
             console.error('Error al cargar fotos de Supabase:', error.message);
         } else {
             supabasePhotos = data
                 .filter(item => item.name)
-                .map(item => supabaseClient.storage.from(PUBLIC-PHOTOS).getPublicUrl(item.name).data.publicUrl);
+                .map(item => supabaseClient.storage.from(SUPABASE_BUCKET).getPublicUrl(item.name).data.publicUrl);
         }
     } catch (err) {
         console.error('Error de conexión con Supabase:', err);
