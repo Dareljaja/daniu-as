@@ -253,7 +253,7 @@ async function loadSupabasePhotos() {
         console.log('📦 Cliente Supabase:', supabaseClient ? 'OK' : 'FALLO');
         console.log('🪣 Bucket:', SUPABASE_BUCKET);
         
-        const { data, error } = await supabaseClient.storage.from(SUPABASE_BUCKET).list('', { limit: 100, offset: 0, sortBy: { column: 'name', order: 'asc' } });
+        const { data, error } = await supabaseClient.storage.from(SUPABASE_BUCKET).list(undefined, { limit: 100, offset: 0, sortBy: { column: 'name', order: 'asc' } });
         
         console.log('📤 Response data:', data);
         console.log('❌ Response error:', error);
@@ -271,20 +271,23 @@ async function loadSupabasePhotos() {
             if ((!items || items.length === 0)) {
                 console.warn('⚠️ No se encontraron items en la raíz del bucket, intentando rutas alternativas...');
                 try {
-                    // Intentar listar en una carpeta con el mismo nombre que el bucket
-                    const alt = await supabaseClient.storage.from(SUPABASE_BUCKET).list(SUPABASE_BUCKET, { limit: 100, offset: 0, sortBy: { column: 'name', order: 'asc' } });
-                    console.log('Alternativa - list(SUPABASE_BUCKET):', alt);
+                    // Intentar listar la raíz sin pasar cadena vacía (prueba alternativa)
+                    const alt = await supabaseClient.storage.from(SUPABASE_BUCKET).list(undefined, { limit: 100, offset: 0, sortBy: { column: 'name', order: 'asc' } });
+                    console.log('Alternativa - list(undefined):', alt);
                     if (alt?.data && alt.data.length > 0) {
                         items = alt.data;
                     }
                 } catch (altErr) {
-                    console.warn('Error al intentar listar en carpeta bucket-named:', altErr);
+                    console.warn('Error al intentar listar la raíz con undefined:', altErr);
                 }
 
                 // Si sigue vacío y tenemos la ruta del último upload, intentar listar la carpeta correspondiente
                 if ((!items || items.length === 0) && window.lastUploadedFullPath) {
                     try {
-                        const parts = window.lastUploadedFullPath.split('/');
+                        // Normalizar: si la ruta completa empieza con el nombre del bucket, quitar ese prefijo
+                        let full = window.lastUploadedFullPath;
+                        if (full.indexOf(SUPABASE_BUCKET + '/') === 0) full = full.slice((SUPABASE_BUCKET + '/').length);
+                        const parts = full.split('/');
                         const folder = parts.slice(0, -1).join('/');
                         if (folder) {
                             const alt2 = await supabaseClient.storage.from(SUPABASE_BUCKET).list(folder, { limit: 100, offset: 0, sortBy: { column: 'name', order: 'asc' } });
