@@ -336,13 +336,25 @@ async function uploadPhotoToSupabase(file) {
     }
 
     console.log('Subida exitosa, datos:', data);
-    alert('¡Foto subida correctamente! Se agregará en un momento.');
-    document.getElementById('addPhotoModal')?.remove();
+    console.log('🧪 Intentando verificar si el archivo existe...');
     
-    // Esperar un poco y luego recargar
-    setTimeout(() => {
+    // Verificar si el archivo existe intentando descargarlo
+    setTimeout(async () => {
+        try {
+            const { data: testData, error: testError } = await supabaseClient.storage.from(SUPABASE_BUCKET).download(fileName);
+            if (testError) {
+                console.error('❌ No se puede descargar el archivo:', testError);
+            } else {
+                console.log('✅ El archivo SÍ existe en Supabase:', fileName, testData);
+            }
+        } catch (err) {
+            console.error('Error en verificación:', err);
+        }
+        
+        alert('¡Foto subida correctamente! Se agregará en un momento.');
+        document.getElementById('addPhotoModal')?.remove();
         loadSupabasePhotos();
-    }, 1000);
+    }, 500);
 }
 
 function openAuth() {
