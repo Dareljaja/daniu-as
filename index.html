@@ -254,29 +254,30 @@ async function loadSupabasePhotos() {
             console.error('Error al cargar fotos de Supabase:', error.message);
             supabasePhotos = [];
         } else {
+            console.log('Supabase storage items:', data);
             const urls = await Promise.all(data
                 .filter(item => item.name)
                 .map(async item => {
                     const publicResult = supabaseClient.storage.from(SUPABASE_BUCKET).getPublicUrl(item.name);
                     let url = publicResult.data?.publicUrl;
-                    if (!url) {
-                        const { data: signedData, error: signedError } = await supabaseClient.storage.from(SUPABASE_BUCKET).createSignedUrl(item.name, 60);
-                        if (signedError) {
-                            console.error('Error creando signed URL:', signedError.message || signedError);
-                            return null;
-                        }
-                        url = signedData?.signedUrl;
+                    if (url) {
+                        return url;
                     }
-                    return url;
+                    const { data: signedData, error: signedError } = await supabaseClient.storage.from(SUPABASE_BUCKET).createSignedUrl(item.name, 60);
+                    if (signedError) {
+                        console.error('Error creando signed URL:', signedError.message || signedError);
+                        return null;
+                    }
+                    return signedData?.signedUrl || null;
                 }));
             supabasePhotos = urls.filter(Boolean);
+            console.log('Supabase photo URLs:', supabasePhotos);
         }
     } catch (err) {
         console.error('Error de conexión con Supabase:', err);
         supabasePhotos = [];
     }
     
-    // Siempre renderizar, aunque falle la carga de Supabase
     renderPhotos();
 }
 
