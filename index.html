@@ -252,13 +252,28 @@ async function loadSupabasePhotos() {
         const { data, error } = await supabaseClient.storage.from(SUPABASE_BUCKET).list('', { limit: 100, offset: 0, sortBy: { column: 'name', order: 'asc' } });
         if (error) {
             console.error('Error al cargar fotos de Supabase:', error.message);
+            supabasePhotos = [];
         } else {
-            supabasePhotos = data
+            const urls = await Promise.all(data
                 .filter(item => item.name)
-                .map(item => supabaseClient.storage.from(SUPABASE_BUCKET).getPublicUrl(item.name).data.publicUrl);
+                .map(async item => {
+                    const publicResult = supabaseClient.storage.from(SUPABASE_BUCKET).getPublicUrl(item.name);
+                    let url = publicResult.data?.publicUrl;
+                    if (!url) {
+                        const { data: signedData, error: signedError } = await supabaseClient.storage.from(SUPABASE_BUCKET).createSignedUrl(item.name, 60);
+                        if (signedError) {
+                            console.error('Error creando signed URL:', signedError.message || signedError);
+                            return null;
+                        }
+                        url = signedData?.signedUrl;
+                    }
+                    return url;
+                }));
+            supabasePhotos = urls.filter(Boolean);
         }
     } catch (err) {
         console.error('Error de conexión con Supabase:', err);
+        supabasePhotos = [];
     }
     
     // Siempre renderizar, aunque falle la carga de Supabase
@@ -505,7 +520,7 @@ async function removePhoto(btn) {
 }
 
 function renderPhotos() {
-    const allPhotos = supabasePhotos.length > 0 ? supabasePhotos : defaultPhotos;
+    const allPhotos = defaultPhotos.concat(supabasePhotos);
     const gallery = document.getElementById('portfolioGallery');
     
     let html = '';
