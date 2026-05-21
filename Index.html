@@ -1,0 +1,532 @@
+<!DOCTYPE html><html class="light" lang="es" style=""><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Daniela Reyna - Manicurista Profesional</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600&amp;family=Hanken+Grotesk:wght@400;600&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "inverse-primary": "#dfc1ae",
+                    "secondary-fixed-dim": "#eabbbb",
+                    "outline": "#81756e",
+                    "on-primary": "#ffffff",
+                    "secondary": "#795555",
+                    "on-primary-fixed": "#28180c",
+                    "on-surface-variant": "#4f453f",
+                    "surface-container-high": "#f1e6e0",
+                    "inverse-surface": "#352f2c",
+                    "on-tertiary": "#ffffff",
+                    "surface-container-lowest": "#ffffff",
+                    "on-secondary-fixed-variant": "#5f3e3f",
+                    "on-primary-fixed-variant": "#574235",
+                    "surface-variant": "#ebe1db",
+                    "primary-fixed-dim": "#dfc1ae",
+                    "primary-fixed": "#fcdcc9",
+                    "surface-dim": "#e2d8d2",
+                    "surface-container": "#f6ece6",
+                    "on-tertiary-fixed-variant": "#464745",
+                    "tertiary-fixed": "#e3e2e0",
+                    "inverse-on-surface": "#f9efe9",
+                    "secondary-container": "#fbcccc",
+                    "on-surface": "#1f1b17",
+                    "on-secondary-container": "#785454",
+                    "tertiary-fixed-dim": "#c7c6c4",
+                    "on-background": "#1f1b17",
+                    "error": "#ba1a1a",
+                    "on-primary-container": "#604a3c",
+                    "outline-variant": "#d2c4bc",
+                    "tertiary-container": "#c1c1be",
+                    "on-secondary-fixed": "#2e1415",
+                    "primary-container": "#d9bba9",
+                    "surface-bright": "#fff8f5",
+                    "on-tertiary-fixed": "#1a1c1a",
+                    "secondary-fixed": "#ffdad9",
+                    "on-tertiary-container": "#4e4f4d",
+                    "surface-tint": "#715a4b",
+                    "surface-container-highest": "#ebe1db",
+                    "background": "#fff8f5",
+                    "on-secondary": "#ffffff",
+                    "on-error": "#ffffff",
+                    "primary": "#715a4b",
+                    "tertiary": "#5e5f5d",
+                    "error-container": "#ffdad6",
+                    "surface-container-low": "#fcf2ec",
+                    "surface": "#fff8f5",
+                    "on-error-container": "#93000a"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "container-padding-desktop": "80px",
+                    "section-gap": "120px",
+                    "unit": "8px",
+                    "container-padding-mobile": "24px",
+                    "gutter": "24px"
+            },
+            "fontFamily": {
+                    "headline-lg": ["Playfair Display"],
+                    "body-lg": ["Hanken Grotesk"],
+                    "headline-lg-mobile": ["Playfair Display"],
+                    "display": ["Playfair Display"],
+                    "label-sm": ["Hanken Grotesk"],
+                    "body-md": ["Hanken Grotesk"],
+                    "headline-md": ["Playfair Display"]
+            },
+            "fontSize": {
+                    "headline-lg": ["32px", {"lineHeight": "1.3", "fontWeight": "500"}],
+                    "body-lg": ["18px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                    "headline-lg-mobile": ["28px", {"lineHeight": "1.3", "fontWeight": "500"}],
+                    "display": ["48px", {"lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "600"}],
+                    "label-sm": ["12px", {"lineHeight": "1", "letterSpacing": "0.08em", "fontWeight": "600"}],
+                    "body-md": ["16px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                    "headline-md": ["24px", {"lineHeight": "1.4", "fontWeight": "500"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+            display: inline-block;
+            line-height: 1;
+        }
+        .reveal {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.8s ease-out;
+        }
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .masonry-item:nth-child(even) {
+            margin-top: 24px;
+        }
+        .glass-card {
+            backdrop-filter: blur(12px);
+            background: rgba(255, 248, 245, 0.7);
+        }
+        body {
+            -webkit-tap-highlight-color: transparent;
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background font-body-md selection:bg-primary-container selection:text-on-primary-container">
+<!-- TopAppBar -->
+<header class="fixed top-0 w-full flex justify-between items-center px-container-padding-mobile h-16 bg-surface/80 backdrop-blur-md z-50 border-b border-outline-variant/30">
+<button class="text-primary hover:opacity-70 transition-opacity active:scale-95 duration-150">
+<span class="material-symbols-outlined">menu</span>
+</button>
+<h1 class="font-headline-md text-headline-md-mobile tracking-widest text-on-surface">DANIELA REYNA</h1>
+<button class="text-primary hover:opacity-70 transition-opacity active:scale-95 duration-150">
+<span class="material-symbols-outlined">calendar_month</span>
+</button>
+</header>
+<main class="pt-16 pb-32">
+<!-- Bio Section -->
+<section class="reveal relative overflow-hidden px-container-padding-mobile py-16 flex flex-col items-center text-center gap-8 active">
+<div class="absolute inset-0 -z-10 bg-gradient-to-b from-surface-container-low to-background"></div>
+<div class="relative w-48 h-48 rounded-full border-4 border-surface p-1 shadow-[0_8px_30px_rgb(0,0,0,0.04)] group">
+<img id="profileImg" alt="Daniela Reyna Profile" class="w-full h-full object-cover rounded-full" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDxEBbCcYFEr6jiMTZqJxdCQmyidagzNQj1MJzI_I2sOs0V7gzAtJZngxjS92mtKfMqq7NlJ0wbznBEq2xxw397Jl3d5-8QH_Vv6zmmDGSVsmreOYqPpN0XLwwzmWkHpjen6NktaI4CtHvNASA-eYB_6I-om74fiynwRWMP8EMnzpdeDU7hAJVa1vozSSWsOEP86CwI1RSQZBpFsBWyOpZpCmA4NKe27J9bIC38SPcdBMpBOd8SQZBVJxm7ciygOOwvxQRoHDMTnh7I0EY">
+<button id="editProfileBtn" onclick="editProfilePhoto()" class="hidden group-hover:flex absolute inset-0 items-center justify-center bg-black/50 rounded-full text-white">
+<span class="material-symbols-outlined text-4xl">camera_alt</span>
+</button>
+</div>
+<div class="max-w-md space-y-4">
+<span class="font-label-sm text-label-sm uppercase tracking-widest text-primary">Manicurista</span>
+<h2 id="bioTitle" class="font-headline-lg-mobile text-headline-lg-mobile text-on-surface cursor-pointer hover:opacity-70">¡Hola! Soy Daniela.</h2>
+<p id="bioBio" class="font-body-md text-body-md text-on-surface-variant leading-relaxed cursor-pointer hover:opacity-70">
+                    Recientemente certificada como manicurista, mi pasión es transformar tus manos en una obra de arte. Dedicación, detalle y estilo en cada diseño.
+                </p>
+</div>
+</section>
+<!-- Portfolio Gallery -->
+<section class="reveal px-container-padding-mobile py-unit space-y-8 active">
+<div class="space-y-1">
+<span class="font-label-sm text-label-sm uppercase text-secondary">Portfolio</span>
+<h3 class="font-headline-md text-headline-md text-on-surface">Mis Trabajos</h3>
+</div>
+<div id="portfolioGallery" class="grid grid-cols-2 gap-4"></div>
+</section>
+
+<!-- Feedback Section -->
+<section class="reveal px-container-padding-mobile py-16 bg-surface-container-low mt-8 active">
+<div class="text-center space-y-2 mb-12">
+<span class="font-label-sm text-label-sm uppercase text-secondary">Testimonios</span>
+<h3 class="font-headline-md text-headline-md text-on-surface">Tu Opinión Cuenta</h3>
+</div>
+<div id="feedbackList" class="space-y-4 mb-12"></div>
+<!-- Comment Form -->
+<form class="space-y-4" onsubmit="addComment(event);">
+<input id="commentName" class="w-full bg-transparent border-b border-outline-variant py-3 px-1 focus:border-secondary outline-none transition-colors font-body-md" placeholder="Tu Nombre" type="text">
+<textarea id="commentText" class="w-full bg-transparent border-b border-outline-variant py-3 px-1 focus:border-secondary outline-none transition-colors font-body-md resize-none" placeholder="Deja tu comentario..." rows="3"></textarea>
+<button type="submit" class="w-full py-4 px-8 bg-primary text-on-primary rounded-full font-label-sm text-label-sm uppercase tracking-widest hover:opacity-90 active:scale-95 transition-all">Enviar Opinión</button>
+</form>
+</section>
+
+<!-- Call to Action -->
+<section class="reveal px-container-padding-mobile py-20 text-center space-y-8 active">
+<div class="space-y-4">
+<h2 class="font-headline-lg-mobile text-headline-lg-mobile text-on-surface">¿Lista para brillar?</h2>
+<p class="font-body-md text-on-surface-variant max-w-xs mx-auto">Reserva tu espacio hoy y dale a tus manos el cuidado que merecen.</p>
+</div>
+<a class="inline-flex items-center gap-3 py-5 px-10 bg-primary-container text-on-primary-container rounded-full font-label-sm text-label-sm uppercase tracking-widest shadow-lg shadow-primary-container/20 active:scale-90 transition-transform" href="https://wa.me/543518580090">
+<span class="material-symbols-outlined">chat_bubble</span>
+                Agendar Turno
+            </a>
+</section>
+</main>
+<!-- Footer -->
+<footer class="w-full py-12 px-container-padding-mobile flex flex-col items-center gap-4 bg-surface-container-low">
+<h2 class="font-headline-md text-on-surface">DANIELA REYNA</h2>
+<div class="flex gap-6">
+<a class="font-label-sm text-label-sm text-on-surface-variant hover:text-primary transition-colors" href="#">Terms</a>
+<a class="font-label-sm text-label-sm text-on-surface-variant hover:text-primary transition-colors" href="#">Privacy</a>
+<a class="font-label-sm text-label-sm text-on-surface-variant hover:text-primary transition-colors" href="#">Contact</a>
+</div>
+<p class="font-label-sm text-label-sm text-on-surface-variant opacity-60 mt-4">© 2024 Daniela Reyna Artistry</p>
+</footer>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 left-0 w-full flex justify-around items-center px-4 py-2 pb-6 bg-surface border-t border-outline-variant/20 shadow-[0_-4px_20px_0_rgba(113,90,75,0.05)] z-50 rounded-t-xl">
+<a class="flex flex-col items-center justify-center text-primary bg-primary-container/20 rounded-xl px-4 py-1.5 active:scale-90 duration-200" href="#">
+<span class="material-symbols-outlined">home</span>
+<span class="font-label-sm text-label-sm mt-1">Home</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant opacity-60 hover:text-primary transition-colors active:scale-90 duration-200" href="#">
+<span class="material-symbols-outlined">grid_view</span>
+<span class="font-label-sm text-label-sm mt-1">Portfolio</span>
+</a>
+<button onclick="openAuth()" class="flex flex-col items-center justify-center text-on-surface-variant opacity-60 hover:text-primary transition-colors active:scale-90 duration-200">
+<span class="material-symbols-outlined">edit</span>
+<span class="font-label-sm text-label-sm mt-1">Editar</span>
+</button>
+</nav>
+
+<!-- Auth Modal -->
+<div id="authModal" class="hidden fixed inset-0 z-40 bg-black/50 flex items-center justify-center">
+<div class="bg-surface rounded-3xl p-8 max-w-sm w-full mx-4 space-y-6">
+<h3 class="font-headline-md text-headline-md text-on-surface">Modo Edición</h3>
+<input type="password" id="authPassword" placeholder="Contraseña" class="w-full bg-transparent border-b border-outline-variant py-3 px-1 outline-none focus:border-secondary">
+<div class="flex gap-4">
+<button onclick="document.getElementById('authModal').classList.add('hidden')" class="flex-1 py-3 border border-outline rounded-full font-label-sm">Cancelar</button>
+<button onclick="authenticate()" class="flex-1 py-3 bg-primary text-on-primary rounded-full font-label-sm">Entrar</button>
+</div>
+</div>
+</div>
+
+<script>
+const DEFAULT_PASSWORD = 'daniela123';
+let isAuthenticated = false;
+
+const defaultPhotos = [
+    'https://lh3.googleusercontent.com/aida-public/AB6AXuALQ4ouG5XOmT1MoogEvTw8eJ0eNDdjWPIsY4AT3xt_MMCgtG4cQ7w_gnGw3xjku7HlLQRZUU9_hoDovmn-dOOqK4qirwI9cbOgw42yiPYhykaDEPiCWQvTAjOjw8sCDyBGMDmHMKx7TiJwQI9RFW0qbYorfiL0KXOM7N8-BhZU77VfRQRaZYnexCBloJoxVs83-cv2qYxP3zRbsypz6t3AQx4hxCZHFWpCAfxmcfO7JIL0jIShhfGAdmZ3Jo6qHvASe9Vl7r_LFPUTjX8',
+    'https://lh3.googleusercontent.com/aida-public/AB6AXuD7hmqMO5bj7OQKWdvPslF32U0qdLqz2_v5DJNfD0thvnN1BW6RCEaibt_hZp7uzo1_3kNX9ev0KARtMghphTWSIUvu3yfyi2FWc0Hi4cdQTlvqAwQfRTexLuFr_ufsUDVkiQtrPA75m_CJtgNq7pkljiS9jVbfqd-NARACCYGkhL0BqtXjqcmfxDL2sCw6RD8wWssTvrGgikRqekAzmHh7Qksd3EQpplJ-QRqS568wyzkehC-YVssiz0ojC9yZ6qtVIE0AJiBcFl8HCKw',
+    'https://lh3.googleusercontent.com/aida-public/AB6AXuBLAEwIjvRiCoGMF-PGT2YuaWK1IgJRodxPhohFmQyq2WTXkMZuhQ434g0dRVXUZJSYOz1_5ZHfVhAqiPDJqlibnnhgjpKgg536v6llJ-ddiMOo3YMGLR70syo0_vW4SdB3Zn8SHBDhcRd1WYUCoIgJJGQ7vsUyyvoystsT4S2mkGR_I1goz23_V9XA3xOJVCzpcsqZgjv_7hdTwnfYeAHOblNJka1F5dxm53W4RTWMzlO2UJM2fHJhvePJuTEsKYsbwpcDjtWujluQj5w',
+    'https://lh3.googleusercontent.com/aida-public/AB6AXuCH0RzMv89doddWBiQvhU72Se1BPMp0GLu0ZHDhrI0x4vDETmFlbn20ruUr4qSfE1BkUFeqaOpf4ffXvcmdcMR-uISxBg0Rd32KdDScLyAP9qq_yB0Fkd6H5qorpVuM3M4GMvT-G56CTIjTzjNp1EXnM5Wml0Kdu8NxFK-iQ8ejyY_mfwRWNuLogOFLdmb1X0ThABgRatPDaCBr3J18ZlBwulebIwsUWiA33ygt_3ACYInvRVpbWZx_YYMLgvNzxdyxvVH0Mx9tw_PHHMQ'
+];
+
+const defaultComments = [
+    { name: 'Lucía M.', text: 'Increíble trabajo! Mis manos nunca se vieron tan bien. El detalle es de otro nivel.' },
+    { name: 'Martina G.', text: 'Super recomendada. Muy profesional y el ambiente es súper relajante.' }
+];
+
+function openAuth() {
+    document.getElementById('authModal').classList.remove('hidden');
+    document.getElementById('authPassword').focus();
+}
+
+function authenticate() {
+    const password = document.getElementById('authPassword').value;
+    if (password === DEFAULT_PASSWORD) {
+        isAuthenticated = true;
+        document.getElementById('authModal').classList.add('hidden');
+        enterEditMode();
+    } else {
+        alert('Contraseña incorrecta');
+    }
+}
+
+function enterEditMode() {
+    const main = document.querySelector('main');
+    const overlay = document.createElement('div');
+    overlay.id = 'editOverlay';
+    overlay.innerHTML = `
+        <div class="fixed top-0 left-0 right-0 flex justify-between items-center px-4 py-4 bg-primary text-on-primary z-50 rounded-b-xl">
+            <h2 class="font-headline-md">Modo Edición</h2>
+            <button onclick="exitEditMode()" class="font-label-sm bg-on-primary text-primary px-4 py-2 rounded-full">Guardar y Salir</button>
+        </div>
+    `;
+    main.style.marginTop = '80px';
+    document.body.appendChild(overlay);
+    
+    // Mostrar botones de edición
+    document.getElementById('editProfileBtn').classList.remove('hidden');
+    document.getElementById('bioTitle').classList.add('border-2', 'border-primary', 'p-2', 'rounded-lg');
+    document.getElementById('bioBio').classList.add('border-2', 'border-primary', 'p-2', 'rounded-lg');
+    
+    renderPhotos();
+    renderComments();
+}
+
+function exitEditMode() {
+    isAuthenticated = false;
+    const overlay = document.getElementById('editOverlay');
+    const main = document.querySelector('main');
+    if (overlay) overlay.remove();
+    main.style.marginTop = '0';
+    
+    // Ocultar botones de edición
+    document.getElementById('editProfileBtn').classList.add('hidden');
+    document.getElementById('bioTitle').classList.remove('border-2', 'border-primary', 'p-2', 'rounded-lg');
+    document.getElementById('bioTitle').onclick = null;
+    document.getElementById('bioBio').classList.remove('border-2', 'border-primary', 'p-2', 'rounded-lg');
+    document.getElementById('bioBio').onclick = null;
+    
+    renderPhotos();
+    renderComments();
+}
+
+function showAddPhotoUI() {
+    const modal = document.createElement('div');
+    modal.className = 'fixed inset-0 z-40 bg-black/50 flex items-center justify-center';
+    modal.innerHTML = `
+        <div class="bg-surface rounded-3xl p-8 max-w-sm w-full mx-4 space-y-6">
+            <h3 class="font-headline-md text-headline-md text-on-surface">Agregar Foto</h3>
+            <input type="file" id="tempPhotoInput" accept="image/*" class="w-full">
+            <div class="flex gap-4">
+                <button onclick="this.closest('[class*=fixed]').remove()" class="flex-1 py-3 border border-outline rounded-full font-label-sm">Cancelar</button>
+                <button onclick="addPhoto()" class="flex-1 py-3 bg-primary text-on-primary rounded-full font-label-sm">Subir</button>
+            </div>
+        </div>
+    `;
+    document.body.appendChild(modal);
+    document.getElementById('tempPhotoInput').focus();
+}
+
+function addPhoto() {
+    const input = document.getElementById('tempPhotoInput');
+    if (!input || !input.files || !input.files[0]) {
+        alert('Selecciona una foto');
+        return;
+    }
+
+    const file = input.files[0];
+    const reader = new FileReader();
+    
+    reader.onload = function(e) {
+        const photos = JSON.parse(localStorage.getItem('nailPhotos') || '[]');
+        photos.push(e.target.result);
+        localStorage.setItem('nailPhotos', JSON.stringify(photos));
+        
+        document.querySelector('[class*=fixed].bg-black')[0].remove();
+        renderPhotos();
+    };
+    reader.readAsDataURL(file);
+}
+
+function editProfilePhoto() {
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = 'image/*';
+    input.onchange = function(e) {
+        const file = e.target.files[0];
+        if (!file) return;
+        
+        const reader = new FileReader();
+        reader.onload = function(ev) {
+            localStorage.setItem('profilePhoto', ev.target.result);
+            document.getElementById('profileImg').src = ev.target.result;
+        };
+        reader.readAsDataURL(file);
+    };
+    input.click();
+}
+
+function editBioTitle() {
+    const currentText = document.getElementById('bioTitle').innerText;
+    const newText = prompt('Editar título:', currentText);
+    if (newText && newText.trim()) {
+        document.getElementById('bioTitle').innerText = newText;
+        localStorage.setItem('bioTitle', newText);
+    }
+}
+
+function editBioBio() {
+    const currentText = document.getElementById('bioBio').innerText;
+    const newText = prompt('Editar biografía:', currentText);
+    if (newText && newText.trim()) {
+        document.getElementById('bioBio').innerText = newText;
+        localStorage.setItem('bioBio', newText);
+    }
+}
+
+function removePhoto(btn) {
+    const img = btn.parentElement.querySelector('img');
+    if (!img) return;
+    
+    const src = img.src;
+    const photos = JSON.parse(localStorage.getItem('nailPhotos') || '[]');
+    const idx = photos.indexOf(src);
+    
+    if (idx > -1) {
+        photos.splice(idx, 1);
+        localStorage.setItem('nailPhotos', JSON.stringify(photos));
+        renderPhotos();
+    }
+}
+
+function renderPhotos() {
+    const photos = JSON.parse(localStorage.getItem('nailPhotos') || '[]');
+    const allPhotos = defaultPhotos.concat(photos);
+    const gallery = document.getElementById('portfolioGallery');
+    
+    let html = '';
+    let col = 0;
+    
+    allPhotos.forEach((photo, idx) => {
+        if (col === 0) html += '<div class="space-y-4' + (idx > 1 ? ' pt-8' : '') + '">';
+        
+        const height = idx % 2 === 0 ? 'h-64' : 'h-48';
+        const deleteBtn = isAuthenticated ? `<button onclick="removePhoto(this)" class="absolute top-2 right-2 bg-red-500 text-white p-2 rounded-full text-xs">✕</button>` : '';
+        
+        html += `<div class="rounded-xl overflow-hidden shadow-sm relative group">
+            <img class="w-full ${height} object-cover" src="${photo}">
+            ${deleteBtn}
+        </div>`;
+        
+        col = (col + 1) % 2;
+        if (col === 0) html += '</div>';
+    });
+    
+    if (col !== 0) html += '</div>';
+    
+    if (isAuthenticated) {
+        html += `<button onclick="showAddPhotoUI()" class="col-span-2 w-full py-4 px-8 bg-primary text-on-primary rounded-full font-label-sm text-label-sm uppercase">+ Agregar Foto</button>`;
+    }
+    
+    gallery.innerHTML = html;
+}
+
+function addComment(e) {
+    e.preventDefault();
+    const name = document.getElementById('commentName').value.trim();
+    const text = document.getElementById('commentText').value.trim();
+    
+    if (!name || !text) {
+        alert('Completa el nombre y comentario');
+        return;
+    }
+
+    const comments = JSON.parse(localStorage.getItem('nailComments') || '[]');
+    comments.push({ name, text });
+    localStorage.setItem('nailComments', JSON.stringify(comments));
+    
+    document.getElementById('commentName').value = '';
+    document.getElementById('commentText').value = '';
+    renderComments();
+}
+
+function removeComment(btn) {
+    const card = btn.closest('.glass-card');
+    const comments = JSON.parse(localStorage.getItem('nailComments') || '[]');
+    const cards = Array.from(document.querySelectorAll('#feedbackList > .glass-card'));
+    const idx = cards.indexOf(card);
+    
+    if (idx >= 0) {
+        comments.splice(idx, 1);
+        localStorage.setItem('nailComments', JSON.stringify(comments));
+        renderComments();
+    }
+}
+
+function renderComments() {
+    const comments = JSON.parse(localStorage.getItem('nailComments') || '[]');
+    const allComments = defaultComments.concat(comments);
+    const feedbackList = document.getElementById('feedbackList');
+    
+    let html = '';
+    allComments.forEach(comment => {
+        const deleteBtn = isAuthenticated ? `<button onclick="removeComment(this)" class="absolute top-4 right-4 text-red-500 hover:text-red-600 text-lg">✕</button>` : '';
+        
+        html += `<div class="glass-card p-6 rounded-2xl border border-outline-variant/20 shadow-sm group relative">
+            <div class="flex items-center gap-1 text-primary-container mb-3">
+                <span class="material-symbols-outlined text-[18px]" style="font-variation-settings: 'FILL' 1;">star</span>
+                <span class="material-symbols-outlined text-[18px]" style="font-variation-settings: 'FILL' 1;">star</span>
+                <span class="material-symbols-outlined text-[18px]" style="font-variation-settings: 'FILL' 1;">star</span>
+                <span class="material-symbols-outlined text-[18px]" style="font-variation-settings: 'FILL' 1;">star</span>
+                <span class="material-symbols-outlined text-[18px]" style="font-variation-settings: 'FILL' 1;">star</span>
+            </div>
+            <p class="font-body-md text-on-surface-variant italic mb-2">"${comment.text}"</p>
+            <span class="font-label-sm text-label-sm text-primary">— ${comment.name}</span>
+            ${deleteBtn}
+        </div>`;
+    });
+    
+    feedbackList.innerHTML = html;
+}
+
+// Animations
+const revealElements = document.querySelectorAll('.reveal');
+const revealOnScroll = () => {
+    const windowHeight = window.innerHeight;
+    revealElements.forEach(el => {
+        const elementTop = el.getBoundingClientRect().top;
+        if (elementTop < windowHeight - 150) {
+            el.classList.add('active');
+        }
+    });
+};
+
+window.addEventListener('scroll', revealOnScroll);
+window.addEventListener('load', () => {
+    // Cargar datos guardados
+    const savedProfile = localStorage.getItem('profilePhoto');
+    if (savedProfile) {
+        document.getElementById('profileImg').src = savedProfile;
+    }
+    
+    const savedTitle = localStorage.getItem('bioTitle');
+    if (savedTitle) {
+        document.getElementById('bioTitle').innerText = savedTitle;
+    }
+    
+    const savedBio = localStorage.getItem('bioBio');
+    if (savedBio) {
+        document.getElementById('bioBio').innerText = savedBio;
+    }
+    
+    // Agregar listeners para hacer clickeables en modo edición
+    document.getElementById('bioTitle').addEventListener('click', function() {
+        if (isAuthenticated) editBioTitle();
+    });
+    
+    document.getElementById('bioBio').addEventListener('click', function() {
+        if (isAuthenticated) editBioBio();
+    });
+    
+    revealOnScroll();
+    renderPhotos();
+    renderComments();
+});
+
+document.querySelectorAll('button, a').forEach(btn => {
+    btn.addEventListener('touchstart', () => {
+        btn.style.opacity = '0.7';
+    });
+    btn.addEventListener('touchend', () => {
+        btn.style.opacity = '1';
+    });
+});
+</script>
+
+</body></html>
