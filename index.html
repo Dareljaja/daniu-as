@@ -312,17 +312,26 @@ async function loadSupabasePhotos() {
 }
 
 async function uploadPhotoToSupabase(file) {
+    console.log('Iniciando subida de:', file.name, 'tamaño:', file.size);
     const fileName = `${Date.now()}_${file.name.replace(/\s+/g, '_')}`;
-    const { error } = await supabaseClient.storage.from(SUPABASE_BUCKET).upload(fileName, file, { cacheControl: '3600', upsert: false });
+    const { data, error } = await supabaseClient.storage.from(SUPABASE_BUCKET).upload(fileName, file, { cacheControl: '3600', upsert: false });
+    
     if (error) {
         const details = error.details || error.code || error.status || '';
-        alert('Error al subir la foto: ' + error.message + (details ? ' (' + details + ')' : ''));
-        console.error(error);
+        const message = 'Error al subir la foto: ' + error.message + (details ? ' (' + details + ')' : '');
+        alert(message);
+        console.error('Upload error:', error);
         return;
     }
 
+    console.log('Subida exitosa, datos:', data);
+    alert('¡Foto subida correctamente! Se agregará en un momento.');
     document.getElementById('addPhotoModal')?.remove();
-    await loadSupabasePhotos();
+    
+    // Esperar un poco y luego recargar
+    setTimeout(() => {
+        loadSupabasePhotos();
+    }, 1000);
 }
 
 function openAuth() {
