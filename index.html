@@ -1,4 +1,4 @@
-<!DOCTYPE html><html class="light" lang="es" style=""><head>
+<!DOCTYPE html><html class="light" lang="es"><head>
 <meta charset="utf-8">
 <meta content="width=device-width, initial-scale=1.0" name="viewport">
 <title>Daniela Reyna - Manicurista Profesional</title>
@@ -124,20 +124,20 @@
 <body class="bg-background text-on-background font-body-md selection:bg-primary-container selection:text-on-primary-container">
 <!-- TopAppBar -->
 <header class="fixed top-0 w-full flex justify-between items-center px-container-padding-mobile h-16 bg-surface/80 backdrop-blur-md z-50 border-b border-outline-variant/30">
-<button class="text-primary hover:opacity-70 transition-opacity active:scale-95 duration-150">
+<button id="menuBtn" class="text-primary hover:opacity-70 transition-opacity active:scale-95 duration-150" type="button">
 <span class="material-symbols-outlined">menu</span>
 </button>
 <h1 class="font-headline-md text-headline-md-mobile tracking-widest text-on-surface">DANIELA REYNA</h1>
-<button class="text-primary hover:opacity-70 transition-opacity active:scale-95 duration-150">
+<button id="scheduleBtn" class="text-primary hover:opacity-70 transition-opacity active:scale-95 duration-150" type="button">
 <span class="material-symbols-outlined">calendar_month</span>
 </button>
 </header>
 <main class="pt-16 pb-32">
 <!-- Bio Section -->
-<section class="reveal relative overflow-hidden px-container-padding-mobile py-16 flex flex-col items-center text-center gap-8 active">
+<section id="homeSection" class="reveal relative overflow-hidden px-container-padding-mobile py-16 flex flex-col items-center text-center gap-8 active">
 <div class="absolute inset-0 -z-10 bg-gradient-to-b from-surface-container-low to-background"></div>
 <div class="relative w-48 h-48 rounded-full border-4 border-surface p-1 shadow-[0_8px_30px_rgb(0,0,0,0.04)] group">
-<img id="profileImg" alt="Daniela Reyna Profile" class="w-full h-full object-cover rounded-full" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDxEBbCcYFEr6jiMTZqJxdCQmyidagzNQj1MJzI_I2sOs0V7gzAtJZngxjS92mtKfMqq7NlJ0wbznBEq2xxw397Jl3d5-8QH_Vv6zmmDGSVsmreOYqPpN0XLwwzmWkHpjen6NktaI4CtHvNASA-eYB_6I-om74fiynwRWMP8EMnzpdeDU7hAJVa1vozSSWsOEP86CwI1RSQZBpFsBWyOpZpCmA4NKe27J9bIC38SPcdBMpBOd8SQZBVJxm7ciygOOwvxQRoHDMTnh7I0EY">
+<img id="profileImg" alt="Daniela Reyna Profile" onclick="openImageModal(this.src, 'Foto de Perfil')" class="w-full h-full object-cover rounded-full cursor-pointer" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDxEBbCcYFEr6jiMTZqJxdCQmyidagzNQj1MJzI_I2sOs0V7gzAtJZngxjS92mtKfMqq7NlJ0wbznBEq2xxw397Jl3d5-8QH_Vv6zmmDGSVsmreOYqPpN0XLwwzmWkHpjen6NktaI4CtHvNASA-eYB_6I-om74fiynwRWMP8EMnzpdeDU7hAJVa1vozSSWsOEP86CwI1RSQZBpFsBWyOpZpCmA4NKe27J9bIC38SPcdBMpBOd8SQZBVJxm7ciygOOwvxQRoHDMTnh7I0EY">
 <button id="editProfileBtn" onclick="editProfilePhoto()" class="hidden group-hover:flex absolute inset-0 items-center justify-center bg-black/50 rounded-full text-white">
 <span class="material-symbols-outlined text-4xl">camera_alt</span>
 </button>
@@ -151,7 +151,7 @@
 </div>
 </section>
 <!-- Portfolio Gallery -->
-<section class="reveal px-container-padding-mobile py-unit space-y-8 active">
+<section id="portfolioSection" class="reveal px-container-padding-mobile py-unit space-y-8 active">
 <div class="space-y-1">
 <span class="font-label-sm text-label-sm uppercase text-secondary">Portfolio</span>
 <h3 class="font-headline-md text-headline-md text-on-surface">Mis Trabajos</h3>
@@ -160,7 +160,7 @@
 </section>
 
 <!-- Feedback Section -->
-<section class="reveal px-container-padding-mobile py-16 bg-surface-container-low mt-8 active">
+<section id="feedbackSection" class="reveal px-container-padding-mobile py-16 bg-surface-container-low mt-8 active">
 <div class="text-center space-y-2 mb-12">
 <span class="font-label-sm text-label-sm uppercase text-secondary">Testimonios</span>
 <h3 class="font-headline-md text-headline-md text-on-surface">Tu Opinión Cuenta</h3>
@@ -256,6 +256,91 @@ function authenticate() {
     }
 }
 
+function openMenu() {
+    const existing = document.getElementById('topMenuOverlay');
+    if (existing) {
+        existing.remove();
+        return;
+    }
+
+    const overlay = document.createElement('div');
+    overlay.id = 'topMenuOverlay';
+    overlay.className = 'fixed inset-0 z-50 bg-black/70 flex items-start justify-center p-4';
+    overlay.innerHTML = `
+        <div class="bg-surface rounded-3xl w-full max-w-sm p-6 space-y-6 shadow-2xl">
+            <div class="flex items-center justify-between">
+                <h3 class="font-headline-md text-on-surface">Menú</h3>
+                <button onclick="document.getElementById('topMenuOverlay')?.remove()" class="text-primary font-bold text-2xl leading-none">×</button>
+            </div>
+            <button onclick="scrollToSection('homeSection')" class="w-full text-left py-3 px-4 bg-primary-container text-on-primary-container rounded-2xl">Inicio</button>
+            <button onclick="scrollToSection('portfolioSection')" class="w-full text-left py-3 px-4 bg-primary-container/80 text-on-primary-container rounded-2xl">Portfolio</button>
+            <button onclick="scrollToSection('feedbackSection')" class="w-full text-left py-3 px-4 bg-primary-container/80 text-on-primary-container rounded-2xl">Testimonios</button>
+            <button onclick="openSchedule()" class="w-full text-left py-3 px-4 bg-primary text-on-primary rounded-2xl">Agendar Turno</button>
+        </div>
+    `;
+    document.body.appendChild(overlay);
+}
+
+function scrollToSection(id) {
+    document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    document.getElementById('topMenuOverlay')?.remove();
+}
+
+function openSchedule() {
+    window.open('https://wa.me/543518580090', '_blank');
+}
+
+function openImageModal(src, alt) {
+    const existing = document.getElementById('imageModal');
+    if (existing) {
+        existing.remove();
+    }
+
+    const modal = document.createElement('div');
+    modal.id = 'imageModal';
+    modal.className = 'fixed inset-0 z-50 bg-black/80 flex items-center justify-center p-4';
+    modal.innerHTML = `
+        <div class="relative max-w-[90vw] max-h-[90vh] overflow-hidden rounded-3xl">
+            <button onclick="closeImageModal()" class="absolute top-4 right-4 z-10 rounded-full bg-black/60 text-white w-10 h-10 flex items-center justify-center text-2xl">×</button>
+            <img id="zoomImage" src="${src}" alt="${alt}" class="max-w-full max-h-full object-contain" style="transform: scale(1); transition: transform 0.2s ease;">
+        </div>
+    `;
+    document.body.appendChild(modal);
+
+    const zoomImage = document.getElementById('zoomImage');
+    let scale = 1;
+
+    modal.addEventListener('wheel', event => {
+        event.preventDefault();
+        scale += event.deltaY * -0.001;
+        scale = Math.min(Math.max(1, scale), 3);
+        zoomImage.style.transform = `scale(${scale})`;
+    }, { passive: false });
+
+    let touchDistance = 0;
+    modal.addEventListener('touchmove', event => {
+        if (event.touches.length === 2) {
+            event.preventDefault();
+            const dx = event.touches[0].pageX - event.touches[1].pageX;
+            const dy = event.touches[0].pageY - event.touches[1].pageY;
+            const distance = Math.hypot(dx, dy);
+            if (touchDistance) {
+                scale *= distance / touchDistance;
+                scale = Math.min(Math.max(1, scale), 3);
+                zoomImage.style.transform = `scale(${scale})`;
+            }
+            touchDistance = distance;
+        }
+    }, { passive: false });
+    modal.addEventListener('touchend', () => {
+        touchDistance = 0;
+    });
+}
+
+function closeImageModal() {
+    document.getElementById('imageModal')?.remove();
+}
+
 function enterEditMode() {
     const main = document.querySelector('main');
     const overlay = document.createElement('div');
@@ -328,7 +413,7 @@ function addPhoto() {
         photos.push(e.target.result);
         localStorage.setItem('nailPhotos', JSON.stringify(photos));
         
-        document.querySelector('[class*=fixed].bg-black')[0].remove();
+        document.getElementById('addPhotoModal')?.remove();
         renderPhotos();
     };
     reader.readAsDataURL(file);
@@ -400,7 +485,7 @@ function renderPhotos() {
         const deleteBtn = isAuthenticated ? `<button onclick="removePhoto(this)" class="absolute top-2 right-2 bg-red-500 text-white p-2 rounded-full text-xs">✕</button>` : '';
         
         html += `<div class="rounded-xl overflow-hidden shadow-sm relative group">
-            <img class="w-full ${height} object-cover" src="${photo}">
+            <img onclick="openImageModal(this.src, 'Trabajo de uñas')" class="w-full ${height} object-cover cursor-pointer" src="${photo}">
             ${deleteBtn}
         </div>`;
         
@@ -513,6 +598,9 @@ window.addEventListener('load', () => {
     document.getElementById('bioBio').addEventListener('click', function() {
         if (isAuthenticated) editBioBio();
     });
+
+    document.getElementById('menuBtn').addEventListener('click', openMenu);
+    document.getElementById('scheduleBtn').addEventListener('click', openSchedule);
     
     revealOnScroll();
     renderPhotos();
