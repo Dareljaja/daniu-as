@@ -244,7 +244,7 @@ const defaultComments = [
 const SUPABASE_URL = 'https://vyxvbeczzbhrbibhobzl.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZ5eHZiZWN6emJocmJpYmhvYnpsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzkzOTAxMjgsImV4cCI6MjA5NDk2NjEyOH0.-jQZtwSVjClhp-nnxeb3MEK2RaLJrfNES5NTS3kM-qU';
 const SUPABASE_BUCKET = 'public-photos';
-const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+const supabaseClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 let supabasePhotos = [];
 
 async function loadSupabasePhotos() {
