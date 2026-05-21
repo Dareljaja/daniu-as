@@ -5,7 +5,7 @@
 <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600&amp;family=Hanken+Grotesk:wght@400;600&amp;display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/supabase.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script id="tailwind-config">
       tailwind.config = {
         darkMode: "class",
@@ -244,7 +244,7 @@ const defaultComments = [
 const SUPABASE_URL = 'https://vyxvbeczzbhrbibhobzl.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZ5eHZiZWN6emJocmJpYmhvYnpsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzkzOTAxMjgsImV4cCI6MjA5NDk2NjEyOH0.-jQZtwSVjClhp-nnxeb3MEK2RaLJrfNES5NTS3kM-qU';
 const SUPABASE_BUCKET = 'public-photos';
-const supabaseClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 var supabasePhotos = [];
 
 async function loadSupabasePhotos() {
