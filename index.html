@@ -5,6 +5,7 @@
 <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600&amp;family=Hanken+Grotesk:wght@400;600&amp;display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/supabase.min.js"></script>
 <script id="tailwind-config">
       tailwind.config = {
         darkMode: "class",
@@ -240,6 +241,39 @@ const defaultComments = [
     { name: 'Martina G.', text: 'Super recomendada. Muy profesional y el ambiente es súper relajante.' }
 ];
 
+const SUPABASE_URL = 'https://vyxvbeczzbhrbibhobzl.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZ5eHZiZWN6emJocmJpYmhvYnpsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzkzOTAxMjgsImV4cCI6MjA5NDk2NjEyOH0.-jQZtwSVjClhp-nnxeb3MEK2RaLJrfNES5NTS3kM-qU';
+const SUPABASE_BUCKET = 'public-photos';
+const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+let supabasePhotos = [];
+
+async function loadSupabasePhotos() {
+    const { data, error } = await supabaseClient.storage.from(SUPABASE_BUCKET).list('', { limit: 100, offset: 0, sortBy: { column: 'name', order: 'asc' } });
+    if (error) {
+        console.error('Error al cargar fotos de Supabase:', error.message);
+        return;
+    }
+
+    supabasePhotos = data
+        .filter(item => item.name)
+        .map(item => supabaseClient.storage.from(SUPABASE_BUCKET).getPublicUrl(item.name).data.publicUrl);
+
+    renderPhotos();
+}
+
+async function uploadPhotoToSupabase(file) {
+    const fileName = `${Date.now()}_${file.name.replace(/\s+/g, '_')}`;
+    const { error } = await supabaseClient.storage.from(SUPABASE_BUCKET).upload(fileName, file, { cacheControl: '3600', upsert: false });
+    if (error) {
+        alert('Error al subir la foto: ' + error.message);
+        console.error(error);
+        return;
+    }
+
+    document.getElementById('addPhotoModal')?.remove();
+    await loadSupabasePhotos();
+}
+
 function openAuth() {
     document.getElementById('authModal').classList.remove('hidden');
     document.getElementById('authPassword').focus();
@@ -383,13 +417,14 @@ function exitEditMode() {
 
 function showAddPhotoUI() {
     const modal = document.createElement('div');
+    modal.id = 'addPhotoModal';
     modal.className = 'fixed inset-0 z-40 bg-black/50 flex items-center justify-center';
     modal.innerHTML = `
         <div class="bg-surface rounded-3xl p-8 max-w-sm w-full mx-4 space-y-6">
             <h3 class="font-headline-md text-headline-md text-on-surface">Agregar Foto</h3>
             <input type="file" id="tempPhotoInput" accept="image/*" class="w-full">
             <div class="flex gap-4">
-                <button onclick="this.closest('[class*=fixed]').remove()" class="flex-1 py-3 border border-outline rounded-full font-label-sm">Cancelar</button>
+                <button onclick="document.getElementById('addPhotoModal')?.remove()" class="flex-1 py-3 border border-outline rounded-full font-label-sm">Cancelar</button>
                 <button onclick="addPhoto()" class="flex-1 py-3 bg-primary text-on-primary rounded-full font-label-sm">Subir</button>
             </div>
         </div>
@@ -406,17 +441,7 @@ function addPhoto() {
     }
 
     const file = input.files[0];
-    const reader = new FileReader();
-    
-    reader.onload = function(e) {
-        const photos = JSON.parse(localStorage.getItem('nailPhotos') || '[]');
-        photos.push(e.target.result);
-        localStorage.setItem('nailPhotos', JSON.stringify(photos));
-        
-        document.getElementById('addPhotoModal')?.remove();
-        renderPhotos();
-    };
-    reader.readAsDataURL(file);
+    uploadPhotoToSupabase(file);
 }
 
 function editProfilePhoto() {
@@ -455,24 +480,38 @@ function editBioBio() {
     }
 }
 
-function removePhoto(btn) {
+async function removePhoto(btn) {
     const img = btn.parentElement.querySelector('img');
     if (!img) return;
     
     const src = img.src;
-    const photos = JSON.parse(localStorage.getItem('nailPhotos') || '[]');
-    const idx = photos.indexOf(src);
+    const localPhotos = JSON.parse(localStorage.getItem('nailPhotos') || '[]');
+    const idx = localPhotos.indexOf(src);
     
     if (idx > -1) {
-        photos.splice(idx, 1);
-        localStorage.setItem('nailPhotos', JSON.stringify(photos));
+        localPhotos.splice(idx, 1);
+        localStorage.setItem('nailPhotos', JSON.stringify(localPhotos));
         renderPhotos();
+        return;
+    }
+
+    const marker = `/object/public/${SUPABASE_BUCKET}/`;
+    const markerIndex = src.indexOf(marker);
+    if (markerIndex > -1) {
+        const filePath = decodeURIComponent(src.slice(markerIndex + marker.length));
+        const { error } = await supabaseClient.storage.from(SUPABASE_BUCKET).remove([filePath]);
+        if (error) {
+            alert('No se pudo eliminar la foto: ' + error.message);
+            console.error(error);
+            return;
+        }
+        await loadSupabasePhotos();
     }
 }
 
 function renderPhotos() {
-    const photos = JSON.parse(localStorage.getItem('nailPhotos') || '[]');
-    const allPhotos = defaultPhotos.concat(photos);
+    const localPhotos = JSON.parse(localStorage.getItem('nailPhotos') || '[]');
+    const allPhotos = defaultPhotos.concat(supabasePhotos, localPhotos);
     const gallery = document.getElementById('portfolioGallery');
     
     let html = '';
@@ -605,6 +644,7 @@ window.addEventListener('load', () => {
     revealOnScroll();
     renderPhotos();
     renderComments();
+    loadSupabasePhotos();
 });
 
 document.querySelectorAll('button, a').forEach(btn => {
