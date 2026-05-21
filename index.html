@@ -248,16 +248,20 @@ const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 let supabasePhotos = [];
 
 async function loadSupabasePhotos() {
-    const { data, error } = await supabaseClient.storage.from(SUPABASE_BUCKET).list('', { limit: 100, offset: 0, sortBy: { column: 'name', order: 'asc' } });
-    if (error) {
-        console.error('Error al cargar fotos de Supabase:', error.message);
-        return;
+    try {
+        const { data, error } = await supabaseClient.storage.from(SUPABASE_BUCKET).list('', { limit: 100, offset: 0, sortBy: { column: 'name', order: 'asc' } });
+        if (error) {
+            console.error('Error al cargar fotos de Supabase:', error.message);
+        } else {
+            supabasePhotos = data
+                .filter(item => item.name)
+                .map(item => supabaseClient.storage.from(SUPABASE_BUCKET).getPublicUrl(item.name).data.publicUrl);
+        }
+    } catch (err) {
+        console.error('Error de conexión con Supabase:', err);
     }
-
-    supabasePhotos = data
-        .filter(item => item.name)
-        .map(item => supabaseClient.storage.from(SUPABASE_BUCKET).getPublicUrl(item.name).data.publicUrl);
-
+    
+    // Siempre renderizar, aunque falle la carga de Supabase
     renderPhotos();
 }
 
