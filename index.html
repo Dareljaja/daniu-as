@@ -265,7 +265,45 @@ async function loadSupabasePhotos() {
         } else {
             console.log('✅ Supabase storage items:', data);
             console.log('📊 Cantidad de items:', data?.length || 0);
-            const urls = await Promise.all(data
+
+            // Si no hay items en la raíz, intentar rutas alternativas (carpeta con el nombre del bucket o la carpeta del último upload)
+            let items = data || [];
+            if ((!items || items.length === 0)) {
+                console.warn('⚠️ No se encontraron items en la raíz del bucket, intentando rutas alternativas...');
+                try {
+                    // Intentar listar en una carpeta con el mismo nombre que el bucket
+                    const alt = await supabaseClient.storage.from(SUPABASE_BUCKET).list(SUPABASE_BUCKET, { limit: 100, offset: 0, sortBy: { column: 'name', order: 'asc' } });
+                    console.log('Alternativa - list(SUPABASE_BUCKET):', alt);
+                    if (alt?.data && alt.data.length > 0) {
+                        items = alt.data;
+                    }
+                } catch (altErr) {
+                    console.warn('Error al intentar listar en carpeta bucket-named:', altErr);
+                }
+
+                // Si sigue vacío y tenemos la ruta del último upload, intentar listar la carpeta correspondiente
+                if ((!items || items.length === 0) && window.lastUploadedFullPath) {
+                    try {
+                        const parts = window.lastUploadedFullPath.split('/');
+                        const folder = parts.slice(0, -1).join('/');
+                        if (folder) {
+                            const alt2 = await supabaseClient.storage.from(SUPABASE_BUCKET).list(folder, { limit: 100, offset: 0, sortBy: { column: 'name', order: 'asc' } });
+                            console.log('Alternativa - list(folder from lastUploaded):', folder, alt2);
+                            if (alt2?.data && alt2.data.length > 0) {
+                                items = alt2.data;
+                            }
+                        }
+                    } catch (alt2Err) {
+                        console.warn('Error al intentar listar en carpeta derivada del último upload:', alt2Err);
+                    }
+                }
+
+            }
+
+            // Reasignar 'data' a los items encontrados
+            const finalData = items || [];
+            console.log('📦 Final items a procesar:', finalData);
+            const urls = await Promise.all(finalData
                 .filter(item => item.name)
                 .map(async item => {
                     const publicResult = supabaseClient.storage.from(SUPABASE_BUCKET).getPublicUrl(item.name);
@@ -336,7 +374,9 @@ async function uploadPhotoToSupabase(file) {
     }
 
     console.log('Subida exitosa, datos:', data);
-    console.log('🧪 Intentando verificar si el archivo existe...');
+    // Guardar la ruta completa reportada por Supabase para diagnóstico
+    try { window.lastUploadedFullPath = data?.fullPath || data?.path || null; } catch (e) { window.lastUploadedFullPath = null; }
+    console.log('🧪 Intentando verificar si el archivo existe...', window.lastUploadedFullPath);
     
     // Verificar si el archivo existe intentando descargarlo
     setTimeout(async () => {
