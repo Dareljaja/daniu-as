@@ -485,16 +485,6 @@ async function removePhoto(btn) {
     if (!img) return;
     
     const src = img.src;
-    const localPhotos = JSON.parse(localStorage.getItem('nailPhotos') || '[]');
-    const idx = localPhotos.indexOf(src);
-    
-    if (idx > -1) {
-        localPhotos.splice(idx, 1);
-        localStorage.setItem('nailPhotos', JSON.stringify(localPhotos));
-        renderPhotos();
-        return;
-    }
-
     const marker = `/object/public/${SUPABASE_BUCKET}/`;
     const markerIndex = src.indexOf(marker);
     if (markerIndex > -1) {
@@ -510,8 +500,7 @@ async function removePhoto(btn) {
 }
 
 function renderPhotos() {
-    const localPhotos = JSON.parse(localStorage.getItem('nailPhotos') || '[]');
-    const allPhotos = defaultPhotos.concat(supabasePhotos, localPhotos);
+    const allPhotos = supabasePhotos.length > 0 ? supabasePhotos : defaultPhotos;
     const gallery = document.getElementById('portfolioGallery');
     
     let html = '';
@@ -642,7 +631,6 @@ window.addEventListener('load', () => {
     document.getElementById('scheduleBtn').addEventListener('click', openSchedule);
     
     revealOnScroll();
-    renderPhotos();
     renderComments();
     loadSupabasePhotos();
 });
