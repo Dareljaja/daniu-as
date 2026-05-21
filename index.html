@@ -504,27 +504,36 @@ function renderPhotos() {
     const gallery = document.getElementById('portfolioGallery');
     
     let html = '';
-    let col = 0;
     
-    allPhotos.forEach((photo, idx) => {
-        if (col === 0) html += '<div class="space-y-4' + (idx > 1 ? ' pt-8' : '') + '">';
+    if (allPhotos.length === 0) {
+        // Si no hay fotos y está autenticado, mostrar solo el botón
+        if (isAuthenticated) {
+            html = `<div class="col-span-2 w-full"><button onclick="showAddPhotoUI()" class="w-full py-4 px-8 bg-primary text-on-primary rounded-full font-label-sm text-label-sm uppercase">+ Agregar Foto</button></div>`;
+        }
+    } else {
+        // Si hay fotos, renderizar en dos columnas
+        let col = 0;
+        allPhotos.forEach((photo, idx) => {
+            if (col === 0) html += '<div class="space-y-4' + (idx > 1 ? ' pt-8' : '') + '">';
+            
+            const height = idx % 2 === 0 ? 'h-64' : 'h-48';
+            const deleteBtn = isAuthenticated ? `<button onclick="removePhoto(this)" class="absolute top-2 right-2 bg-red-500 text-white p-2 rounded-full text-xs">✕</button>` : '';
+            
+            html += `<div class="rounded-xl overflow-hidden shadow-sm relative group">
+                <img onclick="openImageModal(this.src, 'Trabajo de uñas')" class="w-full ${height} object-cover cursor-pointer" src="${photo}">
+                ${deleteBtn}
+            </div>`;
+            
+            col = (col + 1) % 2;
+            if (col === 0) html += '</div>';
+        });
         
-        const height = idx % 2 === 0 ? 'h-64' : 'h-48';
-        const deleteBtn = isAuthenticated ? `<button onclick="removePhoto(this)" class="absolute top-2 right-2 bg-red-500 text-white p-2 rounded-full text-xs">✕</button>` : '';
+        if (col !== 0) html += '</div>';
         
-        html += `<div class="rounded-xl overflow-hidden shadow-sm relative group">
-            <img onclick="openImageModal(this.src, 'Trabajo de uñas')" class="w-full ${height} object-cover cursor-pointer" src="${photo}">
-            ${deleteBtn}
-        </div>`;
-        
-        col = (col + 1) % 2;
-        if (col === 0) html += '</div>';
-    });
-    
-    if (col !== 0) html += '</div>';
-    
-    if (isAuthenticated) {
-        html += `<button onclick="showAddPhotoUI()" class="col-span-2 w-full py-4 px-8 bg-primary text-on-primary rounded-full font-label-sm text-label-sm uppercase">+ Agregar Foto</button>`;
+        // Agregar botón al final si está autenticado
+        if (isAuthenticated) {
+            html += `<div class="col-span-2"><button onclick="showAddPhotoUI()" class="w-full py-4 px-8 bg-primary text-on-primary rounded-full font-label-sm text-label-sm uppercase">+ Agregar Foto</button></div>`;
+        }
     }
     
     gallery.innerHTML = html;
