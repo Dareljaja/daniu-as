@@ -246,6 +246,8 @@ const SUPABASE_ANON_KEY = 'sb_publishable_J8Qwy5OixrwoI2UJ0rV-SQ_2A1qb4F1';
 const SUPABASE_BUCKET = 'public-photos';
 const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 var supabasePhotos = [];
+// Mantener una lista local de uploads recientes para fallback cuando list() devuelve vacío
+if (!window.lastUploadedFileNames) window.lastUploadedFileNames = [];
 
 async function loadSupabasePhotos() {
     try {
@@ -353,6 +355,31 @@ async function loadSupabasePhotos() {
                 }));
             supabasePhotos = urls.filter(Boolean);
             console.log('✅ Supabase photo URLs cargadas:', supabasePhotos.length, supabasePhotos);
+
+            // Si no se encontraron fotos mediante list(), intentar generar signed URLs para uploads recientes
+            if ((supabasePhotos.length === 0) && window.lastUploadedFileNames && window.lastUploadedFileNames.length) {
+                console.warn('⚠️ list() devolvió vacío — usando fallback con archivos subidos recientemente:', window.lastUploadedFileNames);
+                const fallbackUrls = await Promise.all(window.lastUploadedFileNames.map(async name => {
+                    try {
+                        const { data: signedData, error: signedError } = await supabaseClient.storage.from(SUPABASE_BUCKET).createSignedUrl(name, 60);
+                        if (signedError) {
+                            console.error('Error creando signed URL para', name, signedError);
+                            return null;
+                        }
+                        return signedData?.signedUrl || null;
+                    } catch (e) {
+                        console.error('Excepción creando signed URL para', name, e);
+                        return null;
+                    }
+                }));
+                const validFallback = fallbackUrls.filter(Boolean);
+                if (validFallback.length > 0) {
+                    supabasePhotos = validFallback;
+                    console.log('✅ Fallback URLs generadas:', supabasePhotos);
+                } else {
+                    console.warn('❌ No se pudo generar ninguna signed URL de fallback');
+                }
+            }
         }
     } catch (err) {
         console.error('❌ Error de conexión con Supabase:', err);
@@ -379,6 +406,8 @@ async function uploadPhotoToSupabase(file) {
     console.log('Subida exitosa, datos:', data);
     // Guardar la ruta completa reportada por Supabase para diagnóstico
     try { window.lastUploadedFullPath = data?.fullPath || data?.path || null; } catch (e) { window.lastUploadedFullPath = null; }
+    // Guardar el nombre del archivo para fallback en caso de que list() no muestre nada
+    try { if (data?.path) window.lastUploadedFileNames.push(data.path); else if (data?.fullPath) window.lastUploadedFileNames.push(data.fullPath.replace(/^.*\//, '')); } catch (e) { console.warn('No se pudo registrar lastUploadedFileNames', e); }
     console.log('🧪 Intentando verificar si el archivo existe...', window.lastUploadedFullPath);
     
     // Verificar si el archivo existe intentando descargarlo
@@ -393,7 +422,22 @@ async function uploadPhotoToSupabase(file) {
         } catch (err) {
             console.error('Error en verificación:', err);
         }
-        
+
+        // Intentar generar una signed URL inmediatamente para mostrar en la galería
+        try {
+            const { data: signedData, error: signedError } = await supabaseClient.storage.from(SUPABASE_BUCKET).createSignedUrl(fileName, 60);
+            if (!signedError && signedData?.signedUrl) {
+                // Añadir al array de fotos y refrescar la galería
+                supabasePhotos.unshift(signedData.signedUrl);
+                console.log('Se añadió signed URL inmediata para visualización:', signedData.signedUrl);
+                renderPhotos();
+            } else {
+                console.warn('No se pudo crear signed URL inmediata:', signedError || signedData);
+            }
+        } catch (e) {
+            console.error('Excepción creando signed URL inmediata:', e);
+        }
+
         alert('¡Foto subida correctamente! Se agregará en un momento.');
         document.getElementById('addPhotoModal')?.remove();
         loadSupabasePhotos();
